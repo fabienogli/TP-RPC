@@ -16,4 +16,6 @@ public class Communication {
         String result = reader.readLine();
         return result;
     }
+
+
 }

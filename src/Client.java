@@ -1,3 +1,6 @@
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -24,25 +27,53 @@ public class Client {
         return this.socket.getPort();
     }
 
-    public Socket getSocket() {
-        return this.socket;
+    /**
+     * The customer will send his file to the server
+     * @param file
+     * @param socket
+     * @throws IOException
+     */
+    public void sendFile(String file, Socket socket) throws IOException {
+        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+        FileInputStream fis = new FileInputStream(file);
+        byte[] buffer = new byte[4096];
+        while (fis.read(buffer) > 0) {
+            dos.write(buffer);
+        }
+        fis.close();
     }
 
-    public static void main(String[] args) {
-        Client client;
-        try {
-            client = new Client();
-        } catch (IOException e) {
-            System.out.println("Problème dans l'instanciation du client");
-            e.printStackTrace();
-            return;
+    public boolean connect() throws IOException {
+        Communication.write(socket, Message.connect());
+        String answer = Communication.read(socket);
+        if (!answer.equals(Message.ack())) {
+           quit();
+           return false;
         }
-        try {
-            System.out.println("Le client se connecte");
-            Communication.write(client.socket, "connexion");
-        } catch (IOException e) {
-            System.out.println("Problème pour écriture côté client");
-            e.printStackTrace();
-        }
+        return true;
+    }
+
+    public void quit() throws IOException {
+        socket.close();
+    }
+
+
+    /**
+     * Le client peut envoyer les requêtes au serveur en trois façons selon le protocole collaboratif suivant :
+     * 1) SOURCEColl : Code source de(s) la classe(s) demandé(es) ou
+     * 2) BYTEColl : Bytecode Code compilé de ces classes ou
+     * 3) OBJECTColl : Objets de ces classes
+     */
+
+    public void sourceColl(File file) {
+
+    }
+
+    public void byteColl(File file) {
+
+    }
+
+    public void objectColl(File file) {
+
     }
 }
