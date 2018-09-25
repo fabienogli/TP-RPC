@@ -1,12 +1,7 @@
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import upload.Test;
+
+import java.io.*;
 import java.net.Socket;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 public class Client {
 
@@ -29,22 +24,6 @@ public class Client {
 
     public int getPort() {
         return this.socket.getPort();
-    }
-
-    /**
-     * The customer will send his file to the server
-     * @param file
-     * @param socket
-     * @throws IOException
-     */
-    public void sendFile(File file, Socket socket) throws IOException {
-        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-        FileInputStream fis = new FileInputStream(file);
-        byte[] buffer = new byte[4096];
-        while (fis.read(buffer) > 0) {
-            dos.write(buffer);
-        }
-        fis.close();
     }
 
     public boolean connect() throws IOException {
@@ -71,7 +50,7 @@ public class Client {
 
     public void sourceColl(File file) {
         try {
-            sendFile(file, socket);
+            Communication.sendFile(file, socket);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,6 +62,31 @@ public class Client {
 
 
     public void objectColl(File file) {
+        Test test = new Test();
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            out.writeObject(test);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public static void main(String[] args) {
+        try {
+            Client client = new Client();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void sendFile(String _file) throws IOException {
+        File file = FileService.getFile(_file);
+        Communication.write(socket, String.valueOf(file.length()));
+        Communication.sendFile(file, socket);
     }
 }
