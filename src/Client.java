@@ -1,8 +1,12 @@
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class Client {
 
@@ -33,7 +37,7 @@ public class Client {
      * @param socket
      * @throws IOException
      */
-    public void sendFile(String file, Socket socket) throws IOException {
+    public void sendFile(File file, Socket socket) throws IOException {
         DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
         FileInputStream fis = new FileInputStream(file);
         byte[] buffer = new byte[4096];
@@ -66,12 +70,17 @@ public class Client {
      */
 
     public void sourceColl(File file) {
-
+        try {
+            sendFile(file, socket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void byteColl(File file) {
-
+        FileService.compile(file);
     }
+
 
     public void objectColl(File file) {
 

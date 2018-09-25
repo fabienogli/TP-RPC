@@ -33,7 +33,7 @@ public class ClientApp {
                     client.quit();
                     return;
                 }
-                file = getFile(s_file);
+                file = FileService.getFile(s_file);
             }
             if (chosen.equals(sourceColl)) {
                 client.sourceColl(file);
@@ -49,15 +49,6 @@ public class ClientApp {
             e.printStackTrace();
             return;
         }
-    }
-
-    public static File getFile(String s_file) {
-        File file = new File("src/upload/" + s_file);
-        if (file.exists() && !file.isDirectory()) {
-            return file;
-        }
-        System.out.println("Le fichier n'existe pas.");
-        return null;
     }
 
     public static String getSourceColl() {
