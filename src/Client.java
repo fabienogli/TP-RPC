@@ -1,4 +1,4 @@
-import upload.Test;
+//import upload.Test;
 
 import java.io.*;
 import java.net.Socket;
@@ -62,10 +62,10 @@ public class Client {
 
 
     public void objectColl(File file) {
-        Test test = new Test();
+//        Test test = new Test();
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(test);
+//            out.writeObject(test);
         } catch (IOException e) {
             e.printStackTrace();
         }
