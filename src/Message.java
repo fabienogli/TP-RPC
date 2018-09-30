@@ -1,5 +1,7 @@
 public class Message {
 
+    static String message = "message:";
+
     public static String sendFile() {
         return "can I send a file ?";
     }
@@ -28,6 +30,14 @@ public class Message {
 
     public static String getNameOfFile() {
         return "Quel est le nom de votre fichier ?";
+    }
+
+    public static String getMessage() {
+        return message;
+    }
+
+    public static String getErrorSendFile() {
+        return "Il y a eu une erreur dans l'envoi du fichier";
     }
 
 }

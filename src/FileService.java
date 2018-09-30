@@ -11,8 +11,10 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Optional;
 
 public class FileService {
+
 
 
     public static File compile(File sourceFile) {
@@ -23,6 +25,24 @@ public class FileService {
     }
 
     public static File getFile(String s_file) {
+        File file = new File("src/upload/" + s_file);
+        if (file.exists() && !file.isDirectory()) {
+            return file;
+        }
+        System.out.println("Le fichier n'existe pas.");
+        return null;
+    }
+
+    public static File getFile(Connexion connexion, String s_file) {
+        File file = new File("src/upload/" + s_file);
+        if (file.exists() && !file.isDirectory()) {
+            return file;
+        }
+        System.out.println("Le fichier n'existe pas.");
+        return null;
+    }
+
+    public static File getFile(Client client, String s_file) {
         File file = new File("src/upload/" + s_file);
         if (file.exists() && !file.isDirectory()) {
             return file;
@@ -43,27 +63,7 @@ public class FileService {
         return byteOutputStream.toByteArray().length;
     }
 
-    /**
-     * Right now, we supposed we know the number of parameters, their types and the type return by the method
-     * @param _class
-     * @param _method
-     * @return
-     */
-    public static int callMethod(String _class, String _method) {
-        Object test = getObject(_class);
-        Method method = null;
-        try {
-            method = test.getClass().getMethod(_method, int.class, int.class);
-            int result = (int) method.invoke(test, 1, 1);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
 
-    }
 
     public static Object getObject(String _class) {
         StringBuilder _file = new StringBuilder();

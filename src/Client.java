@@ -1,5 +1,7 @@
 //import upload.Test;
 
+import upload.Test;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -49,23 +51,30 @@ public class Client {
      */
 
     public void sourceColl(File file) {
+        String result = sendFile(file);
+    }
+
+    private String sendFile(File file) {
         try {
             Communication.sendFile(file, socket);
+            return Message.ack();
         } catch (IOException e) {
             e.printStackTrace();
+            return Message.getErrorSendFile();
         }
     }
 
     public void byteColl(File file) {
-        FileService.compile(file);
+        File compiled = FileService.compile(file);
+        String result = sendFile(compiled);
     }
 
 
     public void objectColl(File file) {
-//        Test test = new Test();
+        Test test = new Test();
         try {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-//            out.writeObject(test);
+            out.writeObject(test);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,6 +83,8 @@ public class Client {
     public static void main(String[] args) {
         try {
             Client client = new Client();
+            client.objectColl(FileService.getFile(client, "Test.java"));
+
 
         } catch (IOException e) {
             e.printStackTrace();
