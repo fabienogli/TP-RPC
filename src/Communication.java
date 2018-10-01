@@ -5,15 +5,14 @@ public class Communication {
 
     public static void write(Socket socket, String message) throws IOException {
         DataOutputStream stream = new DataOutputStream(socket.getOutputStream());
-        if (!message.endsWith("\n")) {
-            message += "\n";
-        }
+        message += "\n";
         stream.writeBytes(message);
     }
 
     public static String read(Socket socket) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String result = reader.readLine();
+        System.out.println("read: " +result);
         return result;
     }
 
@@ -39,26 +38,11 @@ public class Communication {
         while (fis.read(buffer) > 0) {
             dos.write(buffer);
         }
-        fis.close();
         dos.flush();
+        fis.close();
     }
 
-    public static void saveFile(String file, Socket client, int filesize) throws IOException {
-        DataInputStream dis = new DataInputStream(client.getInputStream());
-        FileOutputStream fos = new FileOutputStream(file);
-        byte[] buffer = new byte[4096];
 
-        int read = 0;
-        int totalRead = 0;
-        int remaining = filesize;
-        while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-            totalRead += read;
-            remaining -= read;
-            System.out.println("read " + totalRead + " bytes.");
-            fos.write(buffer, 0, read);
-        }
-        fos.close();
-    }
 
 
 }

@@ -1,5 +1,11 @@
 public class Message {
 
+    static String sourceColl = "1";
+    static String byteColl = "2";
+    static String objectColl = "3";
+    static String quit = "q";
+    static String emptyResult = "O_O";
+
     static String message = "message:";
 
     public static String sendFile() {
@@ -13,13 +19,13 @@ public class Message {
     public static String choices() {
         StringBuilder str = new StringBuilder();
         str.append("What do you want to do ?)\n[")
-                .append(ClientApp.getSourceColl())
+                .append(sourceColl)
                 .append("]Code source\n[")
-                .append(ClientApp.getByteColl())
+                .append(byteColl)
                 .append("]Code compilé\n[")
-                .append(ClientApp.getObjectColl())
+                .append(objectColl)
                 .append("]Objet sérialisé\n\n[")
-                .append(ClientApp.getQuit())
+                .append(quit)
                 .append("]Quit\"");
         return str.toString();
     }
@@ -40,4 +46,23 @@ public class Message {
         return "Il y a eu une erreur dans l'envoi du fichier";
     }
 
+    public static String getSourceColl() {
+        return sourceColl;
+    }
+
+    public static String getByteColl() {
+        return byteColl;
+    }
+
+    public static String getObjectColl() {
+        return objectColl;
+    }
+
+    public static String getQuit() {
+        return quit;
+    }
+
+    public static String getEmptyResult() {
+        return emptyResult;
+    }
 }

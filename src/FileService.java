@@ -1,4 +1,4 @@
-//import upload.Test;
+//import clientFiles.Test;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -11,30 +11,30 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Optional;
 
 public class FileService {
 
 
 
-    public static File compile(File sourceFile) {
+    public static File compile(Connexion connexion, File sourceFile) {
+//        System.out.println(sourceFile);
         // Compile source file.
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, null, null, sourceFile.getPath());
-        return getFile(sourceFile.getName().replace("java", "class"));
+        return getFile(connexion, sourceFile.getName().replace("java", "class"));
     }
 
-    public static File getFile(String s_file) {
-        File file = new File("src/upload/" + s_file);
-        if (file.exists() && !file.isDirectory()) {
-            return file;
-        }
-        System.out.println("Le fichier n'existe pas.");
-        return null;
+    public static File compile(Client client, File sourceFile) {
+//        System.out.println(sourceFile);
+        // Compile source file.
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        compiler.run(null, null, null, sourceFile.getPath());
+        return getFile(client, sourceFile.getName().replace("java", "class"));
     }
+
 
     public static File getFile(Connexion connexion, String s_file) {
-        File file = new File("src/upload/" + s_file);
+        File file = new File("serverFiles/" + s_file);
         if (file.exists() && !file.isDirectory()) {
             return file;
         }
@@ -43,7 +43,7 @@ public class FileService {
     }
 
     public static File getFile(Client client, String s_file) {
-        File file = new File("src/upload/" + s_file);
+        File file = new File("src/clientFiles/" + s_file);
         if (file.exists() && !file.isDirectory()) {
             return file;
         }
@@ -69,16 +69,17 @@ public class FileService {
         StringBuilder _file = new StringBuilder();
         _file.append(System.getProperty("user.dir"))
                 .append(File.separator)
-                .append("test")
+                .append("serverFiles") //@TODO change this
                 .append(File.separator);
         File file = new File(_file.toString());
+//        System.out.println(file.toString());
         Object result = null;
         try {
             URL url = file.toURI().toURL();
             URL[] urls = new URL[]{url};
             ClassLoader cl = URLClassLoader.newInstance(urls);
-            String _package = "upload.";
-            Class<?> cls = Class.forName(_package + _class, true, cl);
+            String _package = "clientFiles.";
+            Class<?> cls = Class.forName(_package + _class , true, cl);
             result = cls.getConstructor().newInstance();
 
         } catch (InstantiationException e) {
@@ -96,6 +97,13 @@ public class FileService {
         }
         return result;
     }
+
+    public static String fileToClass(File file) {
+        String _class = file.getName();
+        _class = _class.substring(0, _class.lastIndexOf('.'));
+        return _class;
+    }
+
 
 //    public Method getMethod(String _method, Class classe) {
 //        Method[] methods = classe.getDeclaredMethods();

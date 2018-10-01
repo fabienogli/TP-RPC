@@ -26,30 +26,32 @@ public class ClientApp {
             System.out.println(Message.choices());
             String chosen = readConsole();
             System.out.println(Message.getNameOfFile());
-            File file = null;
-            while (file == null) {
-                String s_file = readConsole();
-                if (s_file.equals(getQuit())) {
-                    client.quit();
-                    return;
-                }
-                file = FileService.getFile(s_file);
-            }
-            if (chosen.equals(sourceColl)) {
-                client.sourceColl(file);
-            } else if (chosen.equals(byteColl)) {
-                client.byteColl(file);
-            } else if (chosen.equals(objectColl)) {
-                client.objectColl(file);
-            } else {
-                client.quit();
-            }
+//            File file = null;
+//            while (file == null) {
+//                String s_file = readConsole();
+//                if (s_file.equals(getQuit())) {
+//                    client.quit();
+//                    return;
+//                }
+//                file = FileService.getFile(s_file);
+//            }
+//            if (chosen.equals(sourceColl)) {
+//                client.sourceColl(file);
+//            } else if (chosen.equals(byteColl)) {
+//                client.byteColl(file);
+//            } else if (chosen.equals(objectColl)) {
+//                client.objectColl(file);
+//            } else {
+//                client.quit();
+//            }
         } catch (IOException e) {
             System.out.println("Problème dans l'instanciation du client");
             e.printStackTrace();
             return;
         }
     }
+
+
 
     public static String getSourceColl() {
         return sourceColl;
