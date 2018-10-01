@@ -7,10 +7,12 @@ import java.util.Optional;
 public class Connexion implements Runnable {
     private Socket client;
     private boolean active;
+    Communication communication;
 
     public Connexion(Socket socket) {
         client = socket;
         active = true;
+        communication = new Communication(socket);
     }
 
 
@@ -75,9 +77,9 @@ public class Connexion implements Runnable {
 
     private String getFile() throws IOException {
 //        System.out.println("Dans file info");
-        String file = Communication.read(client);
-        String size = Communication.read(client);
-        int file_size = Integer.parseInt(size);
+        String file = communication.read(client);
+        String s = communication.read(client);
+        int file_size = Integer.parseInt(s);
         saveFile(client, "serverFiles/clientFiles/" +file, file_size);
         return file;
     }
@@ -102,7 +104,7 @@ public class Connexion implements Runnable {
 
     private void saveFile(Socket clientSock, String file, int filesize) throws IOException {
         DataInputStream dis = new DataInputStream(clientSock.getInputStream());
-        FileOutputStream fos = new FileOutputStream("testfile.jpg");
+        FileOutputStream fos = new FileOutputStream(file);
         byte[] buffer = new byte[4096];
 
         int read = 0;
@@ -113,33 +115,12 @@ public class Connexion implements Runnable {
             remaining -= read;
 //            System.out.println("read " + totalRead + " bytes.");
             fos.write(buffer, 0, read);
+            System.out.println(buffer);
+            fos.flush();
         }
+        System.out.println("icic");
 
         fos.close();
-        dis.close();
-    }
-
-    public byte[] readFile(String fileName) throws IOException {
-        File file = new File(fileName);
-        byte[] fileData = new byte[(int)file.length()];
-        BufferedInputStream br = new BufferedInputStream(new FileInputStream(file));
-
-        int bytesRead = 0;
-        int b;
-        while ((b = br.read()) != -1) {
-            fileData[bytesRead++] = (byte)b;
-        }
-
-        br.close();
-        return fileData;
-    }
-
-    private void sendFile(String filename) {
-        for (byte i : data) {
-            this.socket.getOutputStream().write(i);
-        }
-
-        System.out.println("\r\nSent " + data.length + " bytes to server.");
     }
 
 
@@ -149,7 +130,7 @@ public class Connexion implements Runnable {
         String answer;
         answer = optional.orElseGet(Message::getEmptyResult);
         try {
-            Communication.write(client, answer);
+            communication.write(client, answer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -161,8 +142,8 @@ public class Connexion implements Runnable {
          * TEST
          */
 //        testObjectColl();
-        testByteColl();
-//        testReceivedFile();
+//        testByteColl();
+        testReceivedFile();
     }
 
     /**
@@ -173,8 +154,8 @@ public class Connexion implements Runnable {
         try {
             String file = getFile();
 
-//             Communication.write(client, Message.ack());
-             String method = Communication.read(client);
+//             communication.write(client, Message.ack());
+             String method = communication.read(client);
 //            System.out.println("Method recu:" + method);
 //             Optional result = byteColl(file, method);
 //             sendResponse(result);
@@ -187,7 +168,7 @@ public class Connexion implements Runnable {
     private void testSourceColl() {
         try {
             String file = getFile();
-            String method = Communication.read(client);
+            String method = communication.read(client);
             Optional result = sourceColl(file, method);
             sendResponse(result);
         } catch (IOException e) {
@@ -197,8 +178,8 @@ public class Connexion implements Runnable {
 
     public  void testObjectColl() {
         try {
-            String method = Communication.read(client);
-            Communication.write(client, Message.ack());
+            String method = communication.read(client);
+            communication.write(client, Message.ack());
 //            System.out.println(method);
             Optional result = objectColl(method);
             sendResponse(result);
