@@ -1,5 +1,7 @@
 //import clientFiles.Test;
 
+import clientFiles.Test;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Optional;
@@ -45,9 +47,6 @@ public class Client {
 
     private void sendFileInfo(File file) {
         try {
-//            System.out.println(file.getName());
-//            System.out.println(file.length());
-//            System.out.println(String.valueOf(file.length()));
             communication.write(file.getName());
             communication.write(String.valueOf(file.length()));
         } catch (IOException e) {
@@ -57,13 +56,14 @@ public class Client {
 
 
 
-    public void sourceColl(String _class) {
+    public void sourceColl(String _class, String method) {
         String extension = ".java";
         _class += extension;
         File file = FileService.getFile(this, _class);
         sendFileInfo(file);
         try {
             communication.sendFile(file);
+            communication.write(method);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,11 +77,6 @@ public class Client {
         try {
             communication.sendFile(file);
             communication.write(method);
-            communication.write(method);
-//            String answer = communication.read(socket);
-//            System.out.println(answer);
-//            System.out.println("réponse après envoie fichier et info fichier: " + answer);
-//            System.out.println("Le client a envoyé la méthode:" + method);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,41 +104,47 @@ public class Client {
 
 
 
-//    public void testObjectColl(Client client) {
-//        String _class ="Test";
-//        String method = "add";
-//        try {
-//            communication.write(client.socket, method);
-//            String answer = communication.read(client.socket);
-//            System.out.println(answer);
-//            client.objectColl(FileService.getObject(_class));
-//            answer = communication.read(client.socket);
-//            System.out.println(answer);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public String testObjectColl() {
+        String _class ="Test";
+        String method = "add";
+        String answer = "";
+        try {
+            communication.write(method);
+            answer = communication.read();
+            objectColl(FileService.getObject(_class));
+            answer = communication.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
 //
-//    public static void testByteColl(Client client) {
-//        String _class = "Test";
-//        String method = "add";
-//        client.byteColl(_class, method);
+    public String testByteColl() {
+        String _class = "Test";
+        String method = "add";
+        String answer = "";
+        byteColl(_class, method);
+        try {
+            answer = communication.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return answer;
+
+    }
 //
-//    }
-//
-//    public static void testSourceColl(Client client) {
-//        String _class = "Test";
-//        String method = "add";
-//        client.sourceColl(_class);
-//        try {
-//            System.out.println(communication.read(client.socket));
-//            communication.write(client.socket,method);
-//            String result = communication.read(client.socket);
-//            System.out.println(result);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public String testSourceColl() {
+        String _class = "Test";
+        String method = "add";
+        String answer = "";
+        sourceColl(_class, method);
+        try {
+            answer = communication.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
 
     public void testSendFile() {
         File file = FileService.getFile(this, "Test.class");
@@ -154,19 +155,15 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) {
         try {
             Client client = new Client();
-//            client.testSendFile(client);
-//            String result = client.communication.read();
-//            client.communication.write("add");
-//            client.communication.write("add");
-            client.byteColl("Test", "add");
-            String s = client.communication.read();
-            System.out.println(s);
+//            String answer = client.testObjectColl();
+//            String answer = client.testSourceColl();
+            String answer = client.testByteColl();
+            System.out.println(answer);
 //
 //
         } catch (IOException e) {

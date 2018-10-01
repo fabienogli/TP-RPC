@@ -49,6 +49,7 @@ public class Communication {
      * @throws IOException
      */
     public void sendFile(File file) throws IOException {
+        System.out.println("Debut Sendfile");
         DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
         FileInputStream fis = new FileInputStream(file);
         byte[] buffer = new byte[4096];
@@ -56,9 +57,10 @@ public class Communication {
 //            System.out.println(buffer);
             dos.write(buffer);
         }
-//        System.out.println("ici");
         dos.flush();
         fis.close();
+        write("");
+        System.out.println("Fin Sendfile");
     }
 
 

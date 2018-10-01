@@ -18,6 +18,7 @@ public class Connexion implements Runnable {
 
 
     public Optional sourceColl(String _file, String method) {
+        System.out.println("nom="+_file);
         File file = FileService.compile(this, FileService.getFile(this, _file));
         return callMethod(file.getName(), method);
     }
@@ -59,11 +60,9 @@ public class Connexion implements Runnable {
     public Optional<String> callMethod(Object o, String _method) {
         Optional<String> optional;
         Method method = null;
-//        System.out.println("Method:" +_method);
         try {
             method = o.getClass().getMethod(_method, int.class, int.class);
             optional = Optional.of(String.valueOf((int) method.invoke(o, 1, 1)));
-//            System.out.println("Result=" + optional.get());
             return optional;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -76,7 +75,6 @@ public class Connexion implements Runnable {
     }
 
     private String getFile() throws IOException {
-//        System.out.println("Dans file info");
         String file = communication.read();
         String s = communication.read();
         int file_size = Integer.parseInt(s);
@@ -85,6 +83,7 @@ public class Connexion implements Runnable {
     }
 
     private void saveFile(String file, int filesize) throws IOException {
+        System.out.println("Save File Debut");
         DataInputStream dis = new DataInputStream(client.getInputStream());
         FileOutputStream fos = new FileOutputStream(file);
         byte[] buffer = new byte[4096];
@@ -92,23 +91,18 @@ public class Connexion implements Runnable {
         int read = 0;
         int totalRead = 0;
         int remaining = filesize;
-        while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+        System.out.println("remaining:" + remaining);
+        while((read = dis.read(buffer, totalRead, Math.min(buffer.length, remaining))) > 0) {
             totalRead += read;
             remaining -= read;
-//            System.out.println("read " + totalRead + " bytes.");
+            System.out.println("dans la boucle while:" + read);
             fos.write(buffer, 0, read);
-//            System.out.println(buffer);
             fos.flush();
         }
-//        System.out.println("icic");
-        fos.flush();
         communication.read();
-//        System.out.println(dis.readLine());
         fos.close();
+        System.out.println("Save File Fin");
     }
-
-
-
 
     private void sendResponse(Optional<String> optional) {
         String answer;
@@ -125,22 +119,9 @@ public class Connexion implements Runnable {
         /**
          * TEST
          */
+//        testSourceColl();
 //        testObjectColl();
         testByteColl();
-//        testReceivedFile();
-//        try {
-//            communication.write(Message.ack());
-//            String received = communication.read();
-//            received = communication.read();
-//            System.out.println(received);
-//            received = communication.read();
-//            System.out.println(received);
-//            received = communication.read();
-//            System.out.println(received);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        testByteColl();
     }
 
     /**
@@ -155,7 +136,7 @@ public class Connexion implements Runnable {
              String method = communication.read();
 //            System.out.println("Method recu:" + method);
 //             method = communication.read();
-            System.out.println("Method recu:" + method);
+//            System.out.println("Method recu:" + method);
              Optional result = byteColl(file, method);
              sendResponse(result);
 
@@ -168,6 +149,7 @@ public class Connexion implements Runnable {
         try {
             String file = getFile();
             String method = communication.read();
+            System.out.println("method=" + method );
             Optional result = sourceColl(file, method);
             sendResponse(result);
         } catch (IOException e) {

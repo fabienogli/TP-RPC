@@ -34,7 +34,7 @@ public class FileService {
 
 
     public static File getFile(Connexion connexion, String s_file) {
-        File file = new File("serverFiles/" + s_file);
+        File file = new File("serverFiles/clientFiles/" + s_file);
         if (file.exists() && !file.isDirectory()) {
             return file;
         }
