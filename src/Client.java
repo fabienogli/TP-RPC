@@ -30,8 +30,8 @@ public class Client {
     }
 
     public boolean connect() throws IOException {
-        communication.write(socket, Message.connect());
-        String answer = communication.read(socket);
+        communication.write(Message.connect());
+        String answer = communication.read();
         if (!answer.equals(Message.ack())) {
            quit();
            return false;
@@ -48,8 +48,8 @@ public class Client {
 //            System.out.println(file.getName());
 //            System.out.println(file.length());
 //            System.out.println(String.valueOf(file.length()));
-            communication.write(socket, file.getName());
-            communication.write(socket, String.valueOf(file.length()));
+            communication.write(file.getName());
+            communication.write(String.valueOf(file.length()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class Client {
         File file = FileService.getFile(this, _class);
         sendFileInfo(file);
         try {
-            communication.sendFile(file, socket);
+            communication.sendFile(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,7 +75,9 @@ public class Client {
         File file = FileService.getFile(this, _class);
         sendFileInfo(file);
         try {
-            communication.sendFile(file, socket);
+            communication.sendFile(file);
+            communication.write(method);
+            communication.write(method);
 //            String answer = communication.read(socket);
 //            System.out.println(answer);
 //            System.out.println("réponse après envoie fichier et info fichier: " + answer);
@@ -83,6 +85,7 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -142,11 +145,12 @@ public class Client {
 //        }
 //    }
 
-    public void testSendFile(Client client) {
-        File file = FileService.getFile(client, "Test.class");
-        client.sendFileInfo(file);
+    public void testSendFile() {
+        File file = FileService.getFile(this, "Test.class");
+        sendFileInfo(file);
         try {
-            communication.sendFile(file, client.socket);
+            communication.sendFile(file);
+            communication.write("fini");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,8 +160,13 @@ public class Client {
     public static void main(String[] args) {
         try {
             Client client = new Client();
-            client.testSendFile(client);
-//            testByteColl(client);
+//            client.testSendFile(client);
+//            String result = client.communication.read();
+//            client.communication.write("add");
+//            client.communication.write("add");
+            client.byteColl("Test", "add");
+            String s = client.communication.read();
+            System.out.println(s);
 //
 //
         } catch (IOException e) {
