@@ -3,7 +3,7 @@ public class Message {
     static String sourceColl = "1";
     static String byteColl = "2";
     static String objectColl = "3";
-    static String quit = "q";
+    static String quit = "0";
     static String emptyResult = "O_O";
     static String wrongChoice = "Not the right question";
 
@@ -27,7 +27,7 @@ public class Message {
                 .append(objectColl)
                 .append("]Objet sérialisé\n\n[")
                 .append(quit)
-                .append("]Quit\"");
+                .append("]Quit");
         return str.toString();
     }
 

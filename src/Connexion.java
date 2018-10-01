@@ -161,14 +161,7 @@ public class Connexion implements Runnable {
             string = communication.read();
             communication.write(Message.ack());
             getFile();
-//            String file = communication.read();
-//            String s = communication.read();
-//            int file_size = Integer.parseInt(s);
-//            communication.saveFile("serverFiles/clientFiles/" +file, file_size);
             communication.write(Message.ack());
-//            string = communication.read();
-//            communication.write("after fini");
-//            communication.outputStreamWriter.write("ola\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

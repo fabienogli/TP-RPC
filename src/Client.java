@@ -12,7 +12,6 @@ public class Client {
 
     public Client() throws IOException{
         this(_IP, _PORT);
-        _PORT++;
         communication = new Communication(socket);
     }
 
@@ -128,7 +127,7 @@ public class Client {
         }
         return getAnswer();
     }
-//
+
     public String testByteColl() {
         try {
             communication.write(Message.getByteColl());
@@ -174,13 +173,11 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        try {
-            Client client = new Client();
-            client.testObjectColl();
-            client.socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Client client = null;
+        File file = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test.java");
+        File file2 = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test2.java");
+        FileService.compile(client, file);
+        FileService.compile(client, file2);
 
     }
 
