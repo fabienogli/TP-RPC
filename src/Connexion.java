@@ -6,32 +6,26 @@ import java.util.Optional;
 
 public class Connexion implements Runnable {
     private Socket client;
-    private boolean active;
     Communication communication;
 
     public Connexion(Socket socket) {
         client = socket;
-        active = true;
         communication = new Communication(socket);
     }
 
-
-
     public Optional sourceColl(String _file, String method) {
-        System.out.println("nom="+_file);
         File file = FileService.compile(this, FileService.getFile(this, _file));
         return callMethod(file.getName(), method);
     }
 
-    public Optional byteColl(String file, String method) {
-        return callMethod(file, method);
-    }
+//    public Optional byteColl(String file, String method) {
+//        return callMethod(file, method);
+//    }
 
-    public Optional objectColl(String method) {
+    public Optional receiveObject(String method) {
         try {
             ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
             Object o = ois.readObject();
-//            System.out.println(o);
             return callMethod(o, method);
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,35 +68,19 @@ public class Connexion implements Runnable {
         return Optional.empty();
     }
 
-    private String getFile() throws IOException {
-        String file = communication.read();
-        String s = communication.read();
-        int file_size = Integer.parseInt(s);
-        saveFile("serverFiles/clientFiles/" +file, file_size);
-        return file;
-    }
-
-    private void saveFile(String file, int filesize) throws IOException {
-        System.out.println("Save File Debut");
-        DataInputStream dis = new DataInputStream(client.getInputStream());
-        FileOutputStream fos = new FileOutputStream(file);
-        byte[] buffer = new byte[4096];
-
-        int read = 0;
-        int totalRead = 0;
-        int remaining = filesize;
-        System.out.println("remaining:" + remaining);
-        while((read = dis.read(buffer, totalRead, Math.min(buffer.length, remaining))) > 0) {
-            totalRead += read;
-            remaining -= read;
-            System.out.println("dans la boucle while:" + read);
-            fos.write(buffer, 0, read);
-            fos.flush();
+    private String getFile() {
+        try {
+            String file = communication.read();
+            String s = communication.read();
+            int file_size = Integer.parseInt(s);
+            communication.saveFile("serverFiles/clientFiles/" + file, file_size);
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        communication.read();
-        fos.close();
-        System.out.println("Save File Fin");
+        return null;
     }
+
 
     private void sendResponse(Optional<String> optional) {
         String answer;
@@ -114,64 +92,83 @@ public class Connexion implements Runnable {
         }
     }
 
+    private void byteColl() {
+        try {
+            String file = getFile();
+            communication.write(Message.ack());
+            String method = communication.read();
+            Optional result = callMethod(file, method);
+            sendResponse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sourceColl() {
+        try {
+            String _file = getFile();
+            String method = communication.read();
+            File file = FileService.compile(this, FileService.getFile(this, _file));
+            Optional result = callMethod(file.getName(), method);
+            sendResponse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void objectColl() {
+        try {
+            String method = communication.read();
+            communication.write(Message.ack());
+            Optional result = receiveObject(method);
+            sendResponse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public void run() {
-        /**
-         * TEST
-         */
-//        testSourceColl();
-//        testObjectColl();
-        testByteColl();
+        try {
+            String choosen = communication.read();
+            if (choosen.charAt(0) == Message.getByteColl().charAt(0)) {
+                communication.write(Message.ack());
+                byteColl();
+            } else if (choosen.charAt(0) == Message.getObjectColl().charAt(0)) {
+                communication.write(Message.ack());
+                objectColl();
+            } else if (choosen.charAt(0) == Message.getSourceColl().charAt(0)) {
+                communication.write(Message.ack());
+                sourceColl();
+            } else {
+                communication.write(Message.getWrongChoice());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        testReceivedFile();
     }
 
     /**
      * TEST
      */
 
-    private void testByteColl() {
-        try {
-            String file = getFile();
-
-//             communication.write(client, Message.ack());
-             String method = communication.read();
-//            System.out.println("Method recu:" + method);
-//             method = communication.read();
-//            System.out.println("Method recu:" + method);
-             Optional result = byteColl(file, method);
-             sendResponse(result);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void testSourceColl() {
-        try {
-            String file = getFile();
-            String method = communication.read();
-            System.out.println("method=" + method );
-            Optional result = sourceColl(file, method);
-            sendResponse(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public  void testObjectColl() {
-        try {
-            String method = communication.read();
-            communication.write(Message.ack());
-//            System.out.println(method);
-            Optional result = objectColl(method);
-            sendResponse(result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void testReceivedFile() {
         try {
+            String string = "";
+            string = communication.read();
+            communication.write(Message.ack());
             getFile();
+//            String file = communication.read();
+//            String s = communication.read();
+//            int file_size = Integer.parseInt(s);
+//            communication.saveFile("serverFiles/clientFiles/" +file, file_size);
+            communication.write(Message.ack());
+//            string = communication.read();
+//            communication.write("after fini");
+//            communication.outputStreamWriter.write("ola\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

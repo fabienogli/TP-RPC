@@ -5,6 +5,7 @@ public class Message {
     static String objectColl = "3";
     static String quit = "q";
     static String emptyResult = "O_O";
+    static String wrongChoice = "Not the right question";
 
     static String message = "message:";
 
@@ -64,5 +65,9 @@ public class Message {
 
     public static String getEmptyResult() {
         return emptyResult;
+    }
+
+    public static String getWrongChoice() {
+        return wrongChoice;
     }
 }

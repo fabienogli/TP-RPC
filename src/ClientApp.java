@@ -1,16 +1,11 @@
-import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class ClientApp {
 
-    static String sourceColl = "1";
-    static String byteColl = "2";
-    static String objectColl = "3";
-    static String quit = "q";
+    static Scanner scanner = new Scanner(System.in);
 
     public static String readConsole() {
-        Scanner scanner = new Scanner(System.in);
         String str = scanner.next();
         return str;
     }
@@ -19,13 +14,31 @@ public class ClientApp {
         Client client;
         try {
             client = new Client();
-            System.out.println("Le client se connecte");
-            if (!client.connect()) {
-                return;
-            }
+
             System.out.println(Message.choices());
             String chosen = readConsole();
-            System.out.println(Message.getNameOfFile());
+            client.getCommunication().write(chosen);
+            if (!client.getAnswer().contains(Message.ack())) {
+                System.out.println("La réponse est inattendue");
+            }
+            System.out.println("Choisissez la classe");
+            String _class = readConsole();
+            System.out.println("Choisissez la méthode");
+            String method = readConsole();
+            System.out.println(chosen);
+            System.out.println(Message.getObjectColl());
+            if (Message.getObjectColl().contains(chosen)) {
+                client.objectColl(_class, method);
+            } else if (Message.getByteColl().contains(chosen)) {
+                client.byteColl(_class, method);
+            } else if (Message.getSourceColl().contains(chosen)) {
+                client.sourceColl(_class, method);
+            } else {
+                System.out.println("rien");
+            }
+            String answer = client.getAnswer();
+            System.out.println(answer);
+//            System.out.println(Message.getNameOfFile());
 //            File file = null;
 //            while (file == null) {
 //                String s_file = readConsole();
@@ -39,8 +52,8 @@ public class ClientApp {
 //                client.sourceColl(file);
 //            } else if (chosen.equals(byteColl)) {
 //                client.byteColl(file);
-//            } else if (chosen.equals(objectColl)) {
-//                client.objectColl(file);
+//            } else if (chosen.equals(sendObject)) {
+//                client.sendObject(file);
 //            } else {
 //                client.quit();
 //            }
@@ -51,21 +64,36 @@ public class ClientApp {
         }
     }
 
-
-
-    public static String getSourceColl() {
-        return sourceColl;
+    public void sourceColl(String _class, String method) {
+        try {
+            Client client = new Client();
+            client.sourceColl(_class, method);
+            String answer = client.getAnswer();
+            System.out.println(answer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static String getByteColl() {
-        return byteColl;
+    public void objectColl(String _class, String method) {
+        try {
+            Client client = new Client();
+            client.objectColl(_class, method);
+            String answer = client.getAnswer();
+            System.out.println(answer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static String getObjectColl() {
-        return objectColl;
-    }
-
-    public static String getQuit() {
-        return quit;
+    public void byteColl(String _class, String method) {
+        try {
+            Client client = new Client();
+            client.byteColl(_class, method);
+            String answer = client.getAnswer();
+            System.out.println(answer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

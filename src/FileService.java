@@ -1,5 +1,3 @@
-//import clientFiles.Test;
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.ByteArrayOutputStream;
@@ -7,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -17,7 +14,6 @@ public class FileService {
 
 
     public static File compile(Connexion connexion, File sourceFile) {
-//        System.out.println(sourceFile);
         // Compile source file.
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, null, null, sourceFile.getPath());
@@ -25,7 +21,6 @@ public class FileService {
     }
 
     public static File compile(Client client, File sourceFile) {
-//        System.out.println(sourceFile);
         // Compile source file.
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, null, null, sourceFile.getPath());
@@ -104,13 +99,4 @@ public class FileService {
         _class = _class.substring(0, _class.lastIndexOf('.'));
         return _class;
     }
-
-
-
-//    public static void main(String[] args) {
-//        File file = getFile("Test.java");
-//        File compiledFile = compile(file);
-//
-//    }
-
 }
