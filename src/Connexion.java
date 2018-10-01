@@ -2,67 +2,37 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
-import java.nio.channels.Channels;
 import java.util.Optional;
 
 public class Connexion implements Runnable {
     private Socket client;
-    private boolean active;
+    Communication communication;
 
     public Connexion(Socket socket) {
         client = socket;
-        active = true;
+        communication = new Communication(socket);
     }
 
-    @Override
-    public void run() {
-        String recu = "";
-//        try {
-//            int filesize = Integer.parseInt(Communication.read(client));
-//            receivedFile("received", filesize);
-            objectColl("","");
-//            recu = Communication.read(client);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(recu);
+    public Optional sourceColl(String _file, String method) {
+        File file = FileService.compile(this, FileService.getFile(this, _file));
+        return callMethod(file.getName(), method);
     }
 
-    public void receivedFile(String string, int filesize) {
-        String file = string;
-        try {
-            Communication.saveFile(string, client, filesize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//    public Optional byteColl(String file, String method) {
+//        return callMethod(file, method);
+//    }
 
-    }
-
-    public void sourceColl(String _file, String method) {
-        File file = FileService.compile(FileService.getFile(_file));
-        byteColl(file, method);
-    }
-
-    public void byteColl(String file, String method) {
-        byteColl(FileService.getFile(file), method);
-    }
-
-    public void byteColl(File file, String method) {
-        callMethod(file.getName(), method);
-    }
-
-    public void objectColl(String object, String method) {
-        object = "Test";
-        method = "add";
+    public Optional receiveObject(String method) {
         try {
             ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
             Object o = ois.readObject();
-            callMethod(o, method);
+            return callMethod(o, method);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return Optional.empty();
     }
 
     /**
@@ -70,8 +40,8 @@ public class Connexion implements Runnable {
      * @param _method the method to call
      * @return the result of the method
      */
-    public Optional callMethod(String _class, String _method) {
-        Object o = FileService.getObject(_class);
+    private Optional callMethod(String _class, String _method) {
+        Object o = FileService.getObject(_class.substring(0, _class.indexOf(".")));
         return callMethod(o, _method);
     }
 
@@ -81,13 +51,12 @@ public class Connexion implements Runnable {
      * @param _method The method called
      * @return the result of the method
      */
-    public Optional callMethod(Object o, String _method) {
-        Optional optional;
+    public Optional<String> callMethod(Object o, String _method) {
+        Optional<String> optional;
         Method method = null;
         try {
             method = o.getClass().getMethod(_method, int.class, int.class);
-            optional = Optional.of((int) method.invoke(o, 1, 1));
-            System.out.println("Result=" + optional.toString());
+            optional = Optional.of(String.valueOf((int) method.invoke(o, 1, 1)));
             return optional;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -99,13 +68,104 @@ public class Connexion implements Runnable {
         return Optional.empty();
     }
 
-    public static void main(String[] args) {
-
+    private String getFile() {
+        try {
+            String file = communication.read();
+            String s = communication.read();
+            int file_size = Integer.parseInt(s);
+            communication.saveFile("serverFiles/clientFiles/" + file, file_size);
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static String fileToClass(File file) {
-        String _class = file.getName();
-        _class = _class.substring(0, _class.lastIndexOf('.'));
-        return _class;
+
+    private void sendResponse(Optional<String> optional) {
+        String answer;
+        answer = optional.orElseGet(Message::getEmptyResult);
+        try {
+            communication.write(answer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    private void byteColl() {
+        try {
+            String file = getFile();
+            communication.write(Message.ack());
+            String method = communication.read();
+            Optional result = callMethod(file, method);
+            sendResponse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sourceColl() {
+        try {
+            String _file = getFile();
+            String method = communication.read();
+            File file = FileService.compile(this, FileService.getFile(this, _file));
+            Optional result = callMethod(file.getName(), method);
+            sendResponse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void objectColl() {
+        try {
+            String method = communication.read();
+            communication.write(Message.ack());
+            Optional result = receiveObject(method);
+            sendResponse(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void run() {
+        try {
+            String choosen = communication.read();
+            if (choosen.charAt(0) == Message.getByteColl().charAt(0)) {
+                communication.write(Message.ack());
+                byteColl();
+            } else if (choosen.charAt(0) == Message.getObjectColl().charAt(0)) {
+                communication.write(Message.ack());
+                objectColl();
+            } else if (choosen.charAt(0) == Message.getSourceColl().charAt(0)) {
+                communication.write(Message.ack());
+                sourceColl();
+            } else {
+                communication.write(Message.getWrongChoice());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        testReceivedFile();
+    }
+
+    /**
+     * TEST
+     */
+
+
+    public void testReceivedFile() {
+        try {
+            String string = "";
+            string = communication.read();
+            communication.write(Message.ack());
+            getFile();
+            communication.write(Message.ack());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
