@@ -1,4 +1,7 @@
-//import clientFiles.Test;
+package client;//import clientFiles.Test;
+
+import util.Communication;
+import util.FileService;
 
 import java.io.*;
 import java.net.Socket;
