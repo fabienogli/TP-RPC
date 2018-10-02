@@ -4,10 +4,10 @@ import java.io.*;
 import java.net.Socket;
 
 public class Communication {
-    Socket socket;
-    BufferedReader reader;
-    PrintWriter bufferedWriter;
-    OutputStreamWriter outputStreamWriter;
+    private Socket socket;
+    private BufferedReader reader;
+    private PrintWriter bufferedWriter;
+    private OutputStreamWriter outputStreamWriter;
 
     public Communication(Socket socket){
         this.socket = socket;
@@ -21,14 +21,14 @@ public class Communication {
     }
 
     public void write(String message) {
-        System.out.println("write:" +message);
+        //System.out.println("write:" +message);
         bufferedWriter.println(message);
         bufferedWriter.flush();
     }
 
     public String read() throws IOException {
         String result = reader.readLine();
-        System.out.println("read: " +result);
+        //System.out.println("read: " +result);
         return result;
     }
 
@@ -49,7 +49,7 @@ public class Communication {
         dos.flush();
         fis.close();
         read();
-        System.out.println("Le fichier a été envoyé");
+        //System.out.println("Le fichier a été envoyé");
         return true;
     }
 
@@ -72,7 +72,7 @@ public class Communication {
         fos.flush();
         fos.close();
         write(Message.ack());
-        System.out.println("Le fichier est reçu");
+        //System.out.println("Le fichier est reçu");
     }
 
 

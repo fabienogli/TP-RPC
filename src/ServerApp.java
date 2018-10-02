@@ -24,7 +24,7 @@ public class ServerApp {
             }
         } catch (IOException e) {
             System.out.println("Problème pour récuperer le client");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }

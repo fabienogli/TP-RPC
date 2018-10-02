@@ -84,7 +84,7 @@ public class Client {
             communication.read();
             communication.write(String.valueOf(b));
             sendObject(FileService.getObject(_class));
-            System.out.println("objet envoyer");
+            System.out.println("Objet envoyer");
         } catch (IOException e) {
             e.printStackTrace();
         }

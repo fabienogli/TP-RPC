@@ -35,8 +35,6 @@ public class ClientApp {
                 String a = readConsole();
                 System.out.println("Donnez moi 1 paramètres (int)");
                 String b = readConsole();
-                System.out.println(chosen);
-                System.out.println(Message.getObjectColl());
                 int i = Integer.parseInt(a);
                 int j = Integer.parseInt(b);
                 if (Message.getObjectColl().contains(chosen)) {
