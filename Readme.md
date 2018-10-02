@@ -1,5 +1,5 @@
-##TP 1 - Système Réparties
-###Guide d’Utilisation
+## TP 1 - Système Réparties
+### Guide d’Utilisation
 Les classes envoyées côté Client sont stockées dans “src/clientFiles”. Ils seront stockées par le Serveur dans “serverFiles/clientFiles”.  
 De base il y a deux classes :  
 ![Classes Tests](captures/1.png)
@@ -32,7 +32,7 @@ Vous pouvez choisir un autre protocole et une autre classe à exécuter ou entre
 
 J’ai également créer une classe pour pouvoir tester qui s’appelle `TestClient.java`. Si vous lancez son main, il testera les trois protocoles.  
 
-###Explication
+### Explication
 Une fois le choix de protocole rentré, le Client va envoyer son choix au serveur. Le serveur renvoie un message “ACK” au Client.  
 Pour le protocole ByteColl et SourceColl, nous devons envoyer le fichier. Tout d’abord le Client envoyons le nom du fichier et sa taille.  
 Le serveur renvoie alors deux messages “ACK”: un pour le nom et la taille du fichier et un pour signaler que le fichier a bien été reçu.  
@@ -40,7 +40,7 @@ Ensuite le Client envoie séparément le nom de la méthode, le premier paramèt
 Le serveur envoie alors le résultat de la méthode.  
 Pour le protocole ObjectColl, le Client envoie directement l’objet au serveur qui renvoie un message “ACK” une fois la réception de l’objet finie. Ensuite le Client envoie séparemment le nom de la méthode, le premier et  le second argument. Il recevra ensuite le résultat et la connexion se fermera.  
 
-###Trace
+### Trace
 
 
 - ByteColl  
