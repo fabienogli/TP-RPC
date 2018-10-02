@@ -1,4 +1,8 @@
-import java.io.File;
+package test;
+import client.Client;
+import util.Communication;
+import util.Message;
+
 import java.io.IOException;
 
 public class TestClient {
@@ -91,7 +95,7 @@ public class TestClient {
     }
 
 //    public void testSendFile() {
-//        File file = FileService.getFile(this, "Test");
+//        File file = util.FileService.getFile(this, "Test");
 //        try {
 //            communication.write("OLA");
 //            communication.read();
@@ -108,11 +112,11 @@ public class TestClient {
 //    }
 
 //    public static void main(String[] args) {
-//        Client client = null;
+//        client.Client client = null;
 //        File file = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test.java");
 //        File file2 = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test2.java");
-//        FileService.compile(client, file);
-//        FileService.compile(client, file2);
+//        util.FileService.compile(client, file);
+//        util.FileService.compile(client, file2);
 //
 //    }
 }

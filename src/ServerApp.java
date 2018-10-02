@@ -1,32 +1,16 @@
+import server.Connexion;
+import server.Server;
+
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
-    private ServerSocket socket;
-    private static int _PORT = 2025;
-
-    public Server() throws IOException {
-        this(_PORT);
-    }
-
-    public Server(int port) throws IOException {
-        this.socket = new ServerSocket(port);
-    }
-
-    public static int getPort() {
-        return _PORT;
-    }
-
-    public Socket getClient() throws IOException {
-        Socket socket = this.socket.accept();
-        return socket;
-    }
+public class ServerApp {
 
     public static void main(String[] args) {
         Server server;
         try {
             server = new Server();
+            System.out.println("Le serveur est lancé et écoute 127.0.0.1:2025 ");
         } catch (IOException e) {
             System.out.println("Problème dans instanciation de server");
             e.printStackTrace();

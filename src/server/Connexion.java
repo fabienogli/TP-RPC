@@ -1,3 +1,9 @@
+package server;
+
+import util.Communication;
+import util.FileService;
+import util.Message;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

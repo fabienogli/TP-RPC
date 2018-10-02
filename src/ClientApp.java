@@ -1,3 +1,6 @@
+import client.Client;
+import util.Message;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -11,10 +14,9 @@ public class ClientApp {
     }
 
     public static void main(String[] args) {
-        boolean active = true;
         try {
 
-            while (active) {
+            while (true) {
                 Client client = new Client();
                 String chosen = getString(client);
                 while (!client.getAnswer().contains(Message.goodChoice())) {
@@ -58,7 +60,7 @@ public class ClientApp {
 
     }
 
-    private static String getString(Client client) throws IOException {
+    private static String getString(Client client) {
         System.out.println(Message.choices());
         String chosen = readConsole();
         client.getCommunication().write(chosen);

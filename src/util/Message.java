@@ -1,3 +1,5 @@
+package util;
+
 public class Message {
     static int wrongConter = 0;
 
