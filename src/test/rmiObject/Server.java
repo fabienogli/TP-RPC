@@ -1,4 +1,4 @@
-package test;
+package test.rmiObject;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;

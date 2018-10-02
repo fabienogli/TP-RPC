@@ -15,28 +15,32 @@ public class ClientApp {
         try {
 
             while (active) {
-                System.out.println(Message.choices());
-                String chosen = readConsole();
+                Client client = new Client();
+                String chosen = getString(client);
+                while (!client.getAnswer().contains(Message.goodChoice())) {
+                    chosen = getString(client);
+                }
                 if (chosen.charAt(0) == '0') {
                     break;
-                }
-                Client client = new Client();
-                client.getCommunication().write(chosen);
-                if (!client.getAnswer().contains(Message.ack())) {
-                    System.out.println("La réponse est inattendue");
                 }
                 System.out.println("Choisissez la classe");
                 String _class = readConsole();
                 System.out.println("Choisissez la méthode");
                 String method = readConsole();
+                System.out.println("Donnez moi 1 paramètres (int)");
+                String a = readConsole();
+                System.out.println("Donnez moi 1 paramètres (int)");
+                String b = readConsole();
                 System.out.println(chosen);
                 System.out.println(Message.getObjectColl());
+                int i = Integer.parseInt(a);
+                int j = Integer.parseInt(b);
                 if (Message.getObjectColl().contains(chosen)) {
-                    client.objectColl(_class, method);
+                    client.objectColl(_class, method, i, j);
                 } else if (Message.getByteColl().contains(chosen)) {
-                    client.byteColl(_class, method);
+                    client.byteColl(_class, method, i, j);
                 } else if (Message.getSourceColl().contains(chosen)) {
-                    client.sourceColl(_class, method);
+                    client.sourceColl(_class, method, i, j);
                 } else {
                     System.out.println("rien");
                 }
@@ -54,36 +58,11 @@ public class ClientApp {
 
     }
 
-    public void sourceColl(String _class, String method) {
-        try {
-            Client client = new Client();
-            client.sourceColl(_class, method);
-            String answer = client.getAnswer();
-            System.out.println(answer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private static String getString(Client client) throws IOException {
+        System.out.println(Message.choices());
+        String chosen = readConsole();
+        client.getCommunication().write(chosen);
+        return chosen;
     }
 
-    public void objectColl(String _class, String method) {
-        try {
-            Client client = new Client();
-            client.objectColl(_class, method);
-            String answer = client.getAnswer();
-            System.out.println(answer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void byteColl(String _class, String method) {
-        try {
-            Client client = new Client();
-            client.byteColl(_class, method);
-            String answer = client.getAnswer();
-            System.out.println(answer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

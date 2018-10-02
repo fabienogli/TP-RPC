@@ -1,11 +1,11 @@
 public class Message {
+    static int wrongConter = 0;
 
     static String sourceColl = "1";
     static String byteColl = "2";
     static String objectColl = "3";
     static String quit = "0";
     static String emptyResult = "O_O";
-    static String wrongChoice = "Not the right question";
 
     static String message = "message:";
 
@@ -15,6 +15,10 @@ public class Message {
 
     public static String ack() {
         return "ok";
+    }
+
+    public static String goodChoice() {
+        return "bon choix";
     }
 
     public static String choices() {
@@ -68,6 +72,9 @@ public class Message {
     }
 
     public static String getWrongChoice() {
-        return wrongChoice;
+        if (wrongConter == 0) {
+            wrongConter++;
+        }
+        return "Vous ne donnez pas le bon choix";
     }
 }

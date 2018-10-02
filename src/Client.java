@@ -52,7 +52,7 @@ public class Client {
 
 
 
-    public void sourceColl(String _class, String method) {
+    public void sourceColl(String _class, String method, int a, int b) {
         String extension = ".java";
         _class += extension;
         File file = FileService.getFile(this, _class);
@@ -60,12 +60,14 @@ public class Client {
         try {
             communication.sendFile(file);
             communication.write(method);
+            communication.write(String.valueOf(a));
+            communication.write(String.valueOf(b));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void byteColl(String _class, String method) {
+    public void byteColl(String _class, String method, int a, int b) {
         String extension = ".class";
         _class += extension;
         File file = FileService.getFile(this, _class);
@@ -73,8 +75,9 @@ public class Client {
         try {
             communication.sendFile(file);
             String s = communication.read();
-            System.out.println(s);
             communication.write(method);
+            communication.write(String.valueOf(a));
+            communication.write(String.valueOf(b));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,11 +94,15 @@ public class Client {
         }
     }
 
-    public void objectColl(String _class, String method) {
+    public void objectColl(String _class, String method, int a, int b) {
         try {
             communication.write(method);
             communication.read();
+            communication.write(String.valueOf(a));
+            communication.read();
+            communication.write(String.valueOf(b));
             sendObject(FileService.getObject(_class));
+            System.out.println("objet envoyer");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,72 +120,6 @@ public class Client {
 
     public Communication getCommunication() {
         return communication;
-    }
-
-    public String testObjectColl() {
-        try {
-            communication.write(Message.getObjectColl());
-            communication.read();
-            String _class = "Test";
-            String method = "add";
-            objectColl(_class, method);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return getAnswer();
-    }
-
-    public String testByteColl() {
-        try {
-            communication.write(Message.getByteColl());
-            communication.read();
-            String _class = "Test";
-            String method = "add";
-            byteColl(_class, method);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return getAnswer();
-
-    }
-//
-    public String testSourceColl() {
-        try {
-            communication.write(Message.getSourceColl());
-            communication.read();
-            String _class = "Test";
-            String method = "add";
-            sourceColl(_class, method);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return getAnswer();
-    }
-
-    public void testSendFile() {
-        File file = FileService.getFile(this, "Test");
-        try {
-            communication.write("OLA");
-            communication.read();
-            sendFileInfo(file);
-            communication.sendFile(file);
-            String s = communication.read();
-//            System.out.println(s);
-//            communication.write("fini");
-//            System.out.println(communication.reader.ready());
-//            communication.read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        Client client = null;
-        File file = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test.java");
-        File file2 = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test2.java");
-        FileService.compile(client, file);
-        FileService.compile(client, file2);
-
     }
 
 }

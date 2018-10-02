@@ -13,20 +13,20 @@ public class Connexion implements Runnable {
         communication = new Communication(socket);
     }
 
-    public Optional sourceColl(String _file, String method) {
+    public Optional sourceColl(String _file, String method, int a, int b) {
         File file = FileService.compile(this, FileService.getFile(this, _file));
-        return callMethod(file.getName(), method);
+        return callMethod(file.getName(), method, a, b);
     }
 
 //    public Optional byteColl(String file, String method) {
 //        return callMethod(file, method);
 //    }
 
-    public Optional receiveObject(String method) {
+    public Optional receiveObject(String method, int a, int b) {
         try {
             ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
             Object o = ois.readObject();
-            return callMethod(o, method);
+            return callMethod(o, method, a, b);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -40,9 +40,9 @@ public class Connexion implements Runnable {
      * @param _method the method to call
      * @return the result of the method
      */
-    private Optional callMethod(String _class, String _method) {
+    private Optional callMethod(String _class, String _method, int a, int b) {
         Object o = FileService.getObject(_class.substring(0, _class.indexOf(".")));
-        return callMethod(o, _method);
+        return callMethod(o, _method, a, b);
     }
 
     /**
@@ -51,12 +51,12 @@ public class Connexion implements Runnable {
      * @param _method The method called
      * @return the result of the method
      */
-    public Optional<String> callMethod(Object o, String _method) {
+    public Optional<String> callMethod(Object o, String _method, int a, int b) {
         Optional<String> optional;
         Method method = null;
         try {
             method = o.getClass().getMethod(_method, int.class, int.class);
-            optional = Optional.of(String.valueOf((int) method.invoke(o, 1, 1)));
+            optional = Optional.of(String.valueOf((int) method.invoke(o, a, b)));
             return optional;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -97,7 +97,11 @@ public class Connexion implements Runnable {
             String file = getFile();
             communication.write(Message.ack());
             String method = communication.read();
-            Optional result = callMethod(file, method);
+            String a = communication.read();
+            String b = communication.read();
+            int i = Integer.valueOf(a);
+            int j = Integer.valueOf(b);
+            Optional result = callMethod(file, method, i, j);
             sendResponse(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,9 +111,13 @@ public class Connexion implements Runnable {
     private void sourceColl() {
         try {
             String _file = getFile();
-            String method = communication.read();
             File file = FileService.compile(this, FileService.getFile(this, _file));
-            Optional result = callMethod(file.getName(), method);
+            String method = communication.read();
+            String a = communication.read();
+            String b = communication.read();
+            int i = Integer.valueOf(a);
+            int j = Integer.valueOf(b);
+            Optional result = callMethod(file.getName(), method, i, j);
             sendResponse(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -120,7 +128,13 @@ public class Connexion implements Runnable {
         try {
             String method = communication.read();
             communication.write(Message.ack());
-            Optional result = receiveObject(method);
+            String a = communication.read();
+            communication.write(Message.ack());
+            String b = communication.read();
+            int i = Integer.valueOf(a);
+            int j = Integer.valueOf(b);
+            Optional result = receiveObject(method, i, j);
+            System.out.println(result);
             sendResponse(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,19 +144,25 @@ public class Connexion implements Runnable {
 
     @Override
     public void run() {
+        boolean open = true;
         try {
             String choosen = communication.read();
-            if (choosen.charAt(0) == Message.getByteColl().charAt(0)) {
-                communication.write(Message.ack());
-                byteColl();
-            } else if (choosen.charAt(0) == Message.getObjectColl().charAt(0)) {
-                communication.write(Message.ack());
-                objectColl();
-            } else if (choosen.charAt(0) == Message.getSourceColl().charAt(0)) {
-                communication.write(Message.ack());
-                sourceColl();
-            } else {
+            char c = choosen.charAt(0);
+            //If what we received is not what we expect
+            while (c != Message.getByteColl().charAt(0) && c != Message.getObjectColl().charAt(0) && c != Message.getSourceColl().charAt(0)) {
                 communication.write(Message.getWrongChoice());
+                choosen = communication.read();
+                c = choosen.charAt(0);
+            }
+            if ( c== Message.getByteColl().charAt(0)) {
+                communication.write(Message.goodChoice());
+                byteColl();
+            } else if (c == Message.getObjectColl().charAt(0)) {
+                communication.write(Message.goodChoice());
+                objectColl();
+            } else if (c == Message.getSourceColl().charAt(0)) {
+                communication.write(Message.goodChoice());
+                sourceColl();
             }
         } catch (IOException e) {
             e.printStackTrace();
