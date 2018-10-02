@@ -41,7 +41,7 @@ public class FileService {
         StringBuilder _file = new StringBuilder();
         _file.append(System.getProperty("user.dir"))
                 .append(File.separator)
-                .append("serverFiles") //@TODO change this
+                .append("serverFiles")
                 .append(File.separator);
         File file = new File(_file.toString());
         Object result = null;

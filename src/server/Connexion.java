@@ -94,7 +94,7 @@ public class Connexion implements Runnable {
 
     /**
      * Send the answer of the method
-     * @param optional Result of th
+     * @param optional Result of the response in optional
      */
     private void sendResponse(Optional<String> optional) {
         String answer;
@@ -102,9 +102,6 @@ public class Connexion implements Runnable {
         communication.write(answer);
     }
 
-    /**
-     * Method that
-     */
     private void byteColl() {
         try {
             String file = receiveFile();
@@ -164,7 +161,7 @@ public class Connexion implements Runnable {
             String choosen = communication.read();
             char c = choosen.charAt(0);
             //If what we received is not what we expect
-            while (c != Message.getByteColl().charAt(0) && c != Message.getObjectColl().charAt(0) && c != Message.getSourceColl().charAt(0)) {
+            while (c != Message.getByteColl().charAt(0) && c != Message.getObjectColl().charAt(0) && c != Message.getSourceColl().charAt(0) && c !=Message.getQuit().charAt(0)) {
                 communication.write(Message.getWrongChoice());
                 choosen = communication.read();
                 c = choosen.charAt(0);
@@ -178,6 +175,8 @@ public class Connexion implements Runnable {
             } else if (c == Message.getSourceColl().charAt(0)) {
                 communication.write(Message.goodChoice());
                 sourceColl();
+            } else if (c == Message.getQuit().charAt(0)) {
+                communication.write(Message.goodChoice());
             }
         } catch (IOException e) {
             e.printStackTrace();

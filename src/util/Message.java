@@ -54,4 +54,8 @@ public class Message {
     public static String getWrongChoice() {
         return "Cette option n'existe pas";
     }
+
+    public static String getQuit() {
+        return quit;
+    }
 }
