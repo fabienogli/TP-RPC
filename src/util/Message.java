@@ -9,7 +9,6 @@ public class Message {
     static String quit = "0";
     static String emptyResult = "O_O";
 
-    static String message = "message:";
 
     public static String ack() {
         return "ok";
@@ -21,7 +20,7 @@ public class Message {
 
     public static String choices() {
         StringBuilder str = new StringBuilder();
-        str.append("What do you want to do ?)\n[")
+        str.append("Que voulez vous faire ?\n[")
                 .append(sourceColl)
                 .append("]Code source\n[")
                 .append(byteColl)
@@ -31,22 +30,6 @@ public class Message {
                 .append(quit)
                 .append("]Quit");
         return str.toString();
-    }
-
-    public static String connect() {
-        return "connexion";
-    }
-
-    public static String getNameOfFile() {
-        return "Quel est le nom de votre fichier ?";
-    }
-
-    public static String getMessage() {
-        return message;
-    }
-
-    public static String getErrorSendFile() {
-        return "Il y a eu une erreur dans l'envoi du fichier";
     }
 
     public static String getSourceColl() {
@@ -61,12 +44,12 @@ public class Message {
         return objectColl;
     }
 
-    public static String getQuit() {
-        return quit;
-    }
-
     public static String getEmptyResult() {
         return emptyResult;
+    }
+
+    public static String getAnswer(String s) {
+        return "Answer = " + s + "\n\n";
     }
 
     public static String getWrongChoice() {

@@ -11,9 +11,9 @@ public class TestClient {
     public static void main(String[] args) {
         int a =2;
         int b = 4;
-        testByteColl(a, b);
-        testObjectColl(a, b);
-        testSourceColl(a, b);
+        System.out.println("ByteColl: " + testByteColl(a, b));
+        System.out.println("ObjectColl: " + testObjectColl(a, b));
+        System.out.println("SourceColl: " + testSourceColl(a, b));
     }
 
     public static String testObjectColl(int a, int b) {
@@ -93,30 +93,4 @@ public class TestClient {
         }
         return response;
     }
-
-//    public void testSendFile() {
-//        File file = util.FileService.getFile(this, "Test");
-//        try {
-//            communication.write("OLA");
-//            communication.read();
-//            sendFileInfo(file);
-//            communication.sendFile(file);
-//            String s = communication.read();
-////            System.out.println(s);
-////            communication.write("fini");
-////            System.out.println(communication.reader.ready());
-////            communication.read();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    public static void main(String[] args) {
-//        client.Client client = null;
-//        File file = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test.java");
-//        File file2 = new File("/home/fabien/github/systemes_reparties_tp1/src/clientFiles/Test2.java");
-//        util.FileService.compile(client, file);
-//        util.FileService.compile(client, file2);
-//
-//    }
 }

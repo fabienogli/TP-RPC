@@ -15,6 +15,7 @@ public class Connexion implements Runnable {
     Communication communication;
 
     public Connexion(Socket socket) {
+        System.out.println("Nouvelle connexion établie");
         client = socket;
         communication = new Communication(socket);
     }

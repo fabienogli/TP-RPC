@@ -47,8 +47,7 @@ public class ClientApp {
                     System.out.println("rien");
                 }
                 String answer = client.getAnswer();
-                System.out.println("ANSWER =");
-                System.out.println(answer +"\n\n");
+                System.out.println("Réponse=" + answer + "\n\n");
                 client.quit();
             }
 
