@@ -13,16 +13,14 @@ public class Connexion implements Runnable {
         communication = new Communication(socket);
     }
 
-    public Optional sourceColl(String _file, String method, int a, int b) {
-        File file = FileService.compile(this, FileService.getFile(this, _file));
-        return callMethod(file.getName(), method, a, b);
-    }
-
-//    public Optional byteColl(String file, String method) {
-//        return callMethod(file, method);
-//    }
-
-    public Optional receiveObject(String method, int a, int b) {
+    /**
+     * Method to get the result of the method of an object sent by stream
+     * @param method to run
+     * @param a int
+     * @param b int
+     * @return int result of the method
+     */
+    public Optional runObject(String method, int a, int b) {
         try {
             ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
             Object o = ois.readObject();
@@ -36,7 +34,7 @@ public class Connexion implements Runnable {
     }
 
     /**
-     * @param _class The class in plain text
+     * @param _class  The class in plain text
      * @param _method the method to call
      * @return the result of the method
      */
@@ -47,7 +45,8 @@ public class Connexion implements Runnable {
 
     /**
      * Right now, we supposed we know the number of parameters, their types and the type return by the method
-     * @param o The object called
+     *
+     * @param o       The object called
      * @param _method The method called
      * @return the result of the method
      */
@@ -68,7 +67,13 @@ public class Connexion implements Runnable {
         return Optional.empty();
     }
 
-    private String getFile() {
+    /**
+     * Method to receive a file from streaming
+     * first we received the name of the file
+     * then we received the size of the file
+     * @return String the name of the file
+     */
+    private String receiveFile() {
         try {
             String file = communication.read();
             String s = communication.read();
@@ -82,19 +87,22 @@ public class Connexion implements Runnable {
     }
 
 
+    /**
+     * Send the answer of the compution
+     * @param optional
+     */
     private void sendResponse(Optional<String> optional) {
         String answer;
         answer = optional.orElseGet(Message::getEmptyResult);
-        try {
-            communication.write(answer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        communication.write(answer);
     }
 
+    /**
+     * Method that
+     */
     private void byteColl() {
         try {
-            String file = getFile();
+            String file = receiveFile();
             communication.write(Message.ack());
             String method = communication.read();
             String a = communication.read();
@@ -110,7 +118,7 @@ public class Connexion implements Runnable {
 
     private void sourceColl() {
         try {
-            String _file = getFile();
+            String _file = receiveFile();
             File file = FileService.compile(this, FileService.getFile(this, _file));
             String method = communication.read();
             String a = communication.read();
@@ -133,7 +141,7 @@ public class Connexion implements Runnable {
             String b = communication.read();
             int i = Integer.valueOf(a);
             int j = Integer.valueOf(b);
-            Optional result = receiveObject(method, i, j);
+            Optional result = runObject(method, i, j);
             System.out.println(result);
             sendResponse(result);
         } catch (IOException e) {
@@ -144,7 +152,6 @@ public class Connexion implements Runnable {
 
     @Override
     public void run() {
-        boolean open = true;
         try {
             String choosen = communication.read();
             char c = choosen.charAt(0);
@@ -154,7 +161,7 @@ public class Connexion implements Runnable {
                 choosen = communication.read();
                 c = choosen.charAt(0);
             }
-            if ( c== Message.getByteColl().charAt(0)) {
+            if (c == Message.getByteColl().charAt(0)) {
                 communication.write(Message.goodChoice());
                 byteColl();
             } else if (c == Message.getObjectColl().charAt(0)) {
@@ -167,25 +174,6 @@ public class Connexion implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        testReceivedFile();
     }
-
-    /**
-     * TEST
-     */
-
-
-    public void testReceivedFile() {
-        try {
-            String string = "";
-            string = communication.read();
-            communication.write(Message.ack());
-            getFile();
-            communication.write(Message.ack());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

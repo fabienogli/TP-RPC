@@ -7,9 +7,9 @@ public class TestClient {
     public static void main(String[] args) {
         int a =2;
         int b = 4;
-//        testByteColl(a, b);
+        testByteColl(a, b);
         testObjectColl(a, b);
-//        testSourceColl(a, b);
+        testSourceColl(a, b);
     }
 
     public static String testObjectColl(int a, int b) {

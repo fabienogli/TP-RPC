@@ -11,22 +11,11 @@ import java.net.URLClassLoader;
 
 public class FileService {
 
-
-
     public static File compile(Connexion connexion, File sourceFile) {
-        // Compile source file.
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         compiler.run(null, null, null, sourceFile.getPath());
         return getFile(connexion, sourceFile.getName().replace("java", "class"));
     }
-
-    public static File compile(Client client, File sourceFile) {
-        // Compile source file.
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        compiler.run(null, null, null, sourceFile.getPath());
-        return getFile(client, sourceFile.getName().replace("java", "class"));
-    }
-
 
     public static File getFile(Connexion connexion, String s_file) {
         File file = new File("serverFiles/clientFiles/" + s_file);
@@ -46,22 +35,7 @@ public class FileService {
         return null;
     }
 
-    public static int sizeof(Object obj) throws IOException {
-
-        ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteOutputStream);
-
-        objectOutputStream.writeObject(obj);
-        objectOutputStream.flush();
-        objectOutputStream.close();
-
-        return byteOutputStream.toByteArray().length;
-    }
-
-
-
     public static Object getObject(String _class) {
-        System.out.println("Dans getObject");
         StringBuilder _file = new StringBuilder();
         _file.append(System.getProperty("user.dir"))
                 .append(File.separator)
@@ -74,7 +48,6 @@ public class FileService {
             URL[] urls = new URL[]{url};
             ClassLoader cl = URLClassLoader.newInstance(urls);
             String _package = "clientFiles.";
-            System.out.println("classe: " +_class);
             Class<?> cls = Class.forName(_package + _class, true, cl);
             result = cls.getConstructor().newInstance();
 
@@ -92,11 +65,5 @@ public class FileService {
             e.printStackTrace();
         }
         return result;
-    }
-
-    public static String fileToClass(File file) {
-        String _class = file.getName();
-        _class = _class.substring(0, _class.lastIndexOf('.'));
-        return _class;
     }
 }

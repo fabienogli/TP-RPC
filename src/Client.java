@@ -10,7 +10,7 @@ public class Client {
     private static int _PORT = 2025;
     private Communication communication;
 
-    public Client() throws IOException{
+    public Client() throws IOException {
         this(_IP, _PORT);
         communication = new Communication(socket);
     }
@@ -19,39 +19,23 @@ public class Client {
         this.socket = new Socket(ip, port);
     }
 
-    public String getIp() {
-        return this.socket.getInetAddress().getHostAddress();
-    }
-
-    public int getPort() {
-        return this.socket.getPort();
-    }
-
-    public boolean connect() throws IOException {
-        communication.write(Message.connect());
-        String answer = communication.read();
-        if (!answer.equals(Message.ack())) {
-           quit();
-           return false;
-        }
-        return true;
-    }
-
     public void quit() throws IOException {
         socket.close();
     }
 
     private void sendFileInfo(File file) {
-        try {
-            communication.write(file.getName());
-            communication.write(String.valueOf(file.length()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        communication.write(file.getName());
+        communication.write(String.valueOf(file.length()));
     }
 
 
-
+    /**
+     *
+     * @param _class Name of the class
+     * @param method Method to use
+     * @param a first parameter
+     * @param b second parameter
+     */
     public void sourceColl(String _class, String method, int a, int b) {
         String extension = ".java";
         _class += extension;

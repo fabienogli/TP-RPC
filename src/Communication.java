@@ -18,7 +18,7 @@ public class Communication {
         }
     }
 
-    public void write(String message) throws IOException {
+    public void write(String message) {
         System.out.println("write:" +message);
         bufferedWriter.println(message);
         bufferedWriter.flush();
@@ -28,15 +28,6 @@ public class Communication {
         String result = reader.readLine();
         System.out.println("read: " +result);
         return result;
-    }
-
-    public void sendObject(Object object) {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(object);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -72,7 +63,6 @@ public class Communication {
 
         int totalRead = 0;
         int remaining = filesize;
-//        System.out.println(dis.available());
         write(Message.ack());
         int read = dis.read(buffer, 0, Math.min(buffer.length, remaining));
         System.out.println("remaining:" + remaining);

@@ -9,10 +9,6 @@ public class Message {
 
     static String message = "message:";
 
-    public static String sendFile() {
-        return "can I send a file ?";
-    }
-
     public static String ack() {
         return "ok";
     }
