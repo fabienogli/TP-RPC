@@ -2,17 +2,15 @@ package clientFiles;
 
 import java.io.Serializable;
 
-public class Test implements Serializable {
+public class SimpleCalc implements Serializable {
 
-    public Test() {
-
-    }
+    public SimpleCalc() { }
 
     public int add(int a, int b) {
         return a+b;
     }
 
-    public int minus(int a, int b) {
+    public int substract(int a, int b) {
         return a - b;
     }
 }

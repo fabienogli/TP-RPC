@@ -2,11 +2,9 @@ package clientFiles;
 
 import java.io.Serializable;
 
-public class Test2 implements Serializable {
+public class ComplexCalc implements Serializable {
 
-    public Test2() {
-
-    }
+    public ComplexCalc() { }
 
     public int multiply(int a, int b) {
         return a * b ;

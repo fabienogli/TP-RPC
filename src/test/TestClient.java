@@ -1,6 +1,7 @@
 package test;
 import client.Client;
 import util.Communication;
+import util.FileService;
 import util.Message;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class TestClient {
         System.out.println("ByteColl: " + testByteColl(a, b));
         System.out.println("ObjectColl: " + testObjectColl(a, b));
         System.out.println("SourceColl: " + testSourceColl(a, b));
+
     }
 
     public static String testObjectColl(int a, int b) {
@@ -24,7 +26,7 @@ public class TestClient {
             try {
                 communication.write(Message.getObjectColl());
                 communication.read();
-                String _class = "Test";
+                String _class = "SimpleCalc";
                 String method = "add";
                 client.objectColl(_class, method, a, b);
             } catch (IOException e) {
@@ -50,7 +52,7 @@ public class TestClient {
             try {
                 communication.write(Message.getByteColl());
                 communication.read();
-                String _class = "Test";
+                String _class = "SimpleCalc";
                 String method = "add";
                 client.byteColl(_class, method, a, b);
             } catch (IOException e) {
@@ -76,7 +78,7 @@ public class TestClient {
             try {
                 communication.write(Message.getSourceColl());
                 communication.read();
-                String _class = "Test";
+                String _class = "SimpleCalc";
                 String method = "add";
                 client.sourceColl(_class, method, a, b);
             } catch (IOException e) {
