@@ -1,7 +1,6 @@
 package util;
 
 public class Message {
-    static int wrongConter = 0;
 
     static String sourceColl = "1";
     static String byteColl = "2";
@@ -53,9 +52,6 @@ public class Message {
     }
 
     public static String getWrongChoice() {
-        if (wrongConter == 0) {
-            wrongConter++;
-        }
-        return "Vous ne donnez pas le bon choix";
+        return "Cette option n'existe pas";
     }
 }

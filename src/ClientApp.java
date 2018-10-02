@@ -19,7 +19,9 @@ public class ClientApp {
             while (true) {
                 Client client = new Client();
                 String chosen = getString(client);
-                while (!client.getAnswer().contains(Message.goodChoice())) {
+                String response = client.getAnswer();
+                while (!response.contains(Message.goodChoice())) {
+                    System.out.println(response);
                     chosen = getString(client);
                 }
                 if (chosen.charAt(0) == '0') {

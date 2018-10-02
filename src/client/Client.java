@@ -44,8 +44,13 @@ public class Client {
         _class += extension;
         File file = FileService.getFile(this, _class);
         sendFileInfo(file);
+        sendToServer(method, a, b, file);
+    }
+
+    private void sendToServer(String method, int a, int b, File file) {
         try {
             communication.sendFile(file);
+            String s = communication.read();
             communication.write(method);
             communication.write(String.valueOf(a));
             communication.write(String.valueOf(b));
@@ -59,17 +64,7 @@ public class Client {
         _class += extension;
         File file = FileService.getFile(this, _class);
         sendFileInfo(file);
-        try {
-            communication.sendFile(file);
-            String s = communication.read();
-            communication.write(method);
-            communication.write(String.valueOf(a));
-            communication.write(String.valueOf(b));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        sendToServer(method, a, b, file);
     }
 
     public void sendObject(Object object) {

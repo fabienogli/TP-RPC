@@ -42,7 +42,7 @@ public class Communication {
         FileInputStream fis = new FileInputStream(file);
         Long l = file.length();
         byte[] buffer = new byte[4096];
-        read();
+        //read();
         while (fis.read(buffer) > 0) {
             dos.write(buffer, 0, l.intValue());
         }
@@ -60,7 +60,7 @@ public class Communication {
 
         int totalRead = 0;
         int remaining = filesize;
-        write(Message.ack());
+        //write(Message.ack());
         int read = dis.read(buffer, 0, Math.min(buffer.length, remaining));
         while(read > 0) {
             totalRead += read;

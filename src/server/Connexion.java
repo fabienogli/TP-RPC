@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class Connexion implements Runnable {
     private Socket client;
-    Communication communication;
+    private Communication communication;
 
     public Connexion(Socket socket) {
         System.out.println("Nouvelle connexion établie");
@@ -27,14 +27,12 @@ public class Connexion implements Runnable {
      * @param b int
      * @return int result of the method
      */
-    public Optional runObject(String method, int a, int b) {
+    public Optional<String> runObject(String method, int a, int b) {
         try {
             ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
             Object o = ois.readObject();
             return callMethod(o, method, a, b);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return Optional.empty();
@@ -45,7 +43,7 @@ public class Connexion implements Runnable {
      * @param _method the method to call
      * @return the result of the method
      */
-    private Optional callMethod(String _class, String _method, int a, int b) {
+    private Optional<String> callMethod(String _class, String _method, int a, int b) {
         Object o = FileService.getObject(_class.substring(0, _class.indexOf(".")));
         return callMethod(o, _method, a, b);
     }
@@ -95,8 +93,8 @@ public class Connexion implements Runnable {
 
 
     /**
-     * Send the answer of the compution
-     * @param optional
+     * Send the answer of the method
+     * @param optional Result of th
      */
     private void sendResponse(Optional<String> optional) {
         String answer;
@@ -110,30 +108,34 @@ public class Connexion implements Runnable {
     private void byteColl() {
         try {
             String file = receiveFile();
-            communication.write(Message.ack());
-            String method = communication.read();
-            String a = communication.read();
-            String b = communication.read();
-            int i = Integer.valueOf(a);
-            int j = Integer.valueOf(b);
-            Optional result = callMethod(file, method, i, j);
-            sendResponse(result);
+            handleRequest(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Common protocol between byteColl and sourceColl
+     * Handle the protocol by receiving parameters and methods, then sending answer
+     * @param file the received file
+     * @throws IOException
+     */
+    private void handleRequest(String file) throws IOException {
+        communication.write(Message.ack());
+        String method = communication.read();
+        String a = communication.read();
+        String b = communication.read();
+        int i = Integer.valueOf(a);
+        int j = Integer.valueOf(b);
+        Optional<String> result = callMethod(file, method, i, j);
+        sendResponse(result);
     }
 
     private void sourceColl() {
         try {
             String _file = receiveFile();
             File file = FileService.compile(this, FileService.getFile(this, _file));
-            String method = communication.read();
-            String a = communication.read();
-            String b = communication.read();
-            int i = Integer.valueOf(a);
-            int j = Integer.valueOf(b);
-            Optional result = callMethod(file.getName(), method, i, j);
-            sendResponse(result);
+            handleRequest(file.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,8 +150,7 @@ public class Connexion implements Runnable {
             String b = communication.read();
             int i = Integer.valueOf(a);
             int j = Integer.valueOf(b);
-            Optional result = runObject(method, i, j);
-            System.out.println(result);
+            Optional<String> result = runObject(method, i, j);
             sendResponse(result);
         } catch (IOException e) {
             e.printStackTrace();
