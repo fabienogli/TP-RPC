@@ -1,20 +1,21 @@
 ## TP 1 - Système Réparties
+Version de Java: 8  
 ### Guide d’Utilisation
 Les classes envoyées côté Client sont stockées dans “src/clientFiles”. Ils seront stockées par le Serveur dans “serverFiles/clientFiles”.  
 De base il y a deux classes :  
-![Classes Tests](captures/1.png)
+![Classes Tests](captures/test.PNG)  
 
 - Etape 1 - Lancer le serveur  
 Aller dans le fichier `ServerApp.java` dans le dossier “src” et lancez le main.  
 
 Le serveur attend maintenant une connexion du client.  
-Lorsqu’un client se sera connecté, vous devriez voir apparaître le résultat suivant dans la console:
-![Client](captures/2.png)
+Lorsqu’un client se sera connecté, vous devriez voir apparaître le résultat suivant dans la console:  
+![Client](captures/1.PNG)  
 
 - Etape 2 - Lancer le client  
 Aller dans le fichier `ClientApp.java` dans le dossier `src` et lancez le main.  
-Vous devriez maintenant avoir le résultat suivant dans votre console:
-![Serveur](captures/3.png)
+Vous devriez maintenant avoir le résultat suivant dans votre console:  
+![Serveur](captures/2.PNG)
 
 - Etape 3 - Choix du protocole  
 Tapez le code associé au protocole.  
@@ -26,7 +27,7 @@ Ensuite vous devez entrer la méthode à tester.
 Vous devez maintenant tapez un à un les deux paramètres. Lorsque vous avez entré les deux paramètres vous devriez avoir un résultat semblable à la photo ci-joint.  
 Le résultat est affiché dans votre console.  
 Vous pouvez choisir un autre protocole et une autre classe à exécuter ou entrer 0 pour quitter l’application.  
-![Résultat](captures/3.png)
+![Résultat](captures/3.PNG)  
 
 
 
@@ -44,16 +45,10 @@ Pour le protocole ObjectColl, le Client envoie directement l’objet au serveur 
 
 
 - ByteColl  
-![ByteColl](captures/4.png)
+![ByteColl](captures/4.PNG)  
 
 - SourceColl  
-![SourceColl](captures/5.png)
+![SourceColl](captures/5.PNG)  
 
 - ObjectColl  
-![ObjectColl](captures/6.png)
-
-
-
-
-
-
+![ObjectColl](captures/6.PNG)  
