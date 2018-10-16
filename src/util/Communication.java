@@ -28,7 +28,7 @@ public class Communication {
 
     public String read() throws IOException {
         String result = reader.readLine();
-        //System.out.println("read: " +result);
+//        System.out.println("read: " +result);
         return result;
     }
 
@@ -42,7 +42,7 @@ public class Communication {
         FileInputStream fis = new FileInputStream(file);
         Long l = file.length();
         byte[] buffer = new byte[4096];
-        //read();
+        read();
         while (fis.read(buffer) > 0) {
             dos.write(buffer, 0, l.intValue());
         }
@@ -60,7 +60,7 @@ public class Communication {
 
         int totalRead = 0;
         int remaining = filesize;
-        //write(Message.ack());
+        write(Message.ack());
         int read = dis.read(buffer, 0, Math.min(buffer.length, remaining));
         while(read > 0) {
             totalRead += read;
@@ -72,7 +72,6 @@ public class Communication {
         fos.flush();
         fos.close();
         write(Message.ack());
-        //System.out.println("Le fichier est reçu");
     }
 
 
