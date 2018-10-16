@@ -12,8 +12,8 @@ public class TestClient {
     public static void main(String[] args) {
         int a =2;
         int b = 4;
-        System.out.println("ByteColl: " + testByteColl(a, b));
         System.out.println("ObjectColl: " + testObjectColl(a, b));
+        System.out.println("ByteColl: " + testByteColl(a, b));
         System.out.println("SourceColl: " + testSourceColl(a, b));
 
     }
@@ -29,7 +29,7 @@ public class TestClient {
                 String _class = "SimpleCalc";
                 String method = "add";
                 client.objectColl(_class, method, a, b);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (IOException e) {
